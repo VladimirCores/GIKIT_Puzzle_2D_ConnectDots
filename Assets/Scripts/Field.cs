@@ -13,6 +13,7 @@ public class Field : MonoBehaviour
 
   private int _dimensionX = 0;
   private int _dimensionY = 0;
+  private int _solved = 0;
   private Dictionary<int, int> _amountToSolve = new Dictionary<int, int>();
 
   void Start()
@@ -29,19 +30,22 @@ public class Field : MonoBehaviour
         var tile = row.GetChild(x).GetComponent<Tile>();
         tile.gameObject.name = "" + x;
         tile.onSelected.AddListener(onTileSelected);
-
-        if (tile.cid > Tile.UNPLAYABLE_INDEX)
-        {
-          if (_amountToSolve.ContainsKey(tile.cid))
-            _amountToSolve[tile.cid] += 1;
-          else _amountToSolve[tile.cid] = 1;
-        }
-
+        _CollectAmountToSolveFromTile(tile);
         _grid[x, y] = tile;
       }
     }
-
+    SetGameStatus(_solved, _amountToSolve.Count);
     _OutputGrid();
+  }
+
+  void _CollectAmountToSolveFromTile(Tile tile)
+  {
+    if (tile.cid > Tile.UNPLAYABLE_INDEX)
+    {
+      if (_amountToSolve.ContainsKey(tile.cid))
+        _amountToSolve[tile.cid] += 1;
+      else _amountToSolve[tile.cid] = 1;
+    }
   }
 
   void _OutputGrid()
@@ -114,6 +118,7 @@ public class Field : MonoBehaviour
           _connections.ForEach((tile) => tile.isSolved = true);
           _canDrawConnection = false;
           _amountToSolve.Remove(firstTile.cid);
+          SetGameStatus(++_solved, _amountToSolve.Count + _solved);
           if (_amountToSolve.Keys.Count == 0)
           {
             Debug.Log("GAME COMPLETE");
@@ -154,6 +159,30 @@ public class Field : MonoBehaviour
       }
       _canDrawConnection = false;
     }
+  }
+
+  public void onRestart()
+  {
+    Debug.Log("Field -> onRestart");
+    int dimension = transform.childCount;
+    for (int y = 0; y < dimension; y++)
+    {
+      var row = transform.GetChild(y).transform;
+      for (int x = 0; x < row.childCount; x++)
+      {
+        var tile = _grid[x, y];
+        tile.ResetConnection();
+        tile.HightlightReset();
+        _CollectAmountToSolveFromTile(tile);
+      }
+    }
+    _solved = 0;
+    SetGameStatus(_solved, _amountToSolve.Count);
+  }
+
+  void SetGameStatus(int solved, int from)
+  {
+    GameObject.Find("txtStatus").GetComponent<UnityEngine.UI.Text>().text = "Solve: " + solved + " from " + from;
   }
 
   void _ResetConnections()

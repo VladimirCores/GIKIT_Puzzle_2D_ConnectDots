@@ -90,6 +90,7 @@ public class Tile : MonoBehaviour
     connection.SetActive(false);
     connection.transform.eulerAngles = Vector3.zero;
     Debug.Log("Tile -> Reset(" + _isSolved + "): " + cid);
+    _isSolved = false;
   }
 
   public void HightlightReset()
