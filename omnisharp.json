@@ -1,0 +1,10 @@
+{
+  "FormattingOptions": {
+    "newLine": "\n",
+    "useTabs": false,
+    "tabSize": 2,
+    "indentationSize": 2
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true
+}
