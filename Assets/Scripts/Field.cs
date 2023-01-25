@@ -69,7 +69,7 @@ public class Field : MonoBehaviour
 
   Vector3 _mouseWorldPosition;
   int _mouseGridX, _mouseGridY;
-  // Update is called once per frame
+
   void Update()
   {
     if (_canDrawConnection)

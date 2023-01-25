@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour
   static public string NAME_MAK = "Mark";
 
   public int cid = 0;
+  [HideInInspector]
   public UnityEvent<Tile> onSelected;
 
   public bool isSelected
